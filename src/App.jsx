@@ -3,11 +3,12 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 function App() {
 
-  
 
   const [tasks,setTasks] = useState([])
   const [search,setSearch] = useState([])
   const [InputValue,setInputValue] = useState("")
+  const [deleted,setDeleted] = useState([])
+  const [completed,setCompleted] = useState([])
 
   function handleSubmit(event){
 
@@ -33,12 +34,23 @@ function App() {
   //is done bilgisi toggle yapılacak
 
   function handleTask(id ,action="done" ){
-    console.log("id--> ",id,action)
+    //console.log("id--> ",id,action)
 
     const actionType = action === "done" ? "isDone" : "isDeleted"
+    
 
     const newTasks = tasks.map((item,index)=>{
       if(index === id){
+        //console.log("item--> ",item)
+        if(item.isDone === true){
+          //console.log(item.title)
+          setCompleted([item.title,...completed])
+        }
+        
+        else if(item.isDeleted === true){
+          setDeleted([item.title,...deleted])
+        
+        }
         return {...item, [actionType]: !item[actionType]}
       }
       return item
@@ -78,7 +90,7 @@ function App() {
     
     {!!tasks.length && <h2>Gorevler:</h2>}
 
-     <ul>
+     <ul style={{display:"inline-block"}} >
      {
        tasks.map(
          (item,index) =>
@@ -95,7 +107,7 @@ function App() {
     }
     </ul>
 
-    <ul>
+    <ul style={{display:"inline-block"}} >
       {
         search.filter(item => item.includes(InputValue)).
         map((item,index) => 
@@ -106,6 +118,31 @@ function App() {
           )
       }
     </ul>
+
+    <ul style={{display:"inline-block"}} >
+        <li>Done olanlar</li>
+        {
+          completed.map((item,index) =>
+            <li key={index}>
+              {item}
+            </li>
+          )
+        }
+      
+    </ul>  
+    <ul style={{display:"inline-block"}} >    
+      <li>Deleted Olanlar</li>
+      {
+        deleted.map((item,index) =>
+          <li key={index}>
+            {item}
+          </li>
+        )
+      }
+        
+      
+    </ul>  
+
     </>
   )
 }
